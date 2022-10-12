@@ -4,32 +4,27 @@
 
 using namespace std;
 
-void intro_text();
 void display_gameboard(vector<char> boardish);
+vector<char> board;
+int turn = 0;
+char player;
+bool win = 0;
+char champ;
+char continue_choice = 'y';
+int move_choice;
 
-int main() {
-	intro_text();
-	vector<char> board;
+int Main() {
+	IntroText();
+
 	for (int i = 1; i <= 9; i++) {
 		board.push_back('-');
 	}
 
-	int turn = 0;
-	char player;
-	bool win = 0;
-	char champ;
-	char continue_choice = 'y';
-	int move_choice;
-
 	while (tolower(continue_choice) == 'y') {
 		display_gameboard(board);
 		while (!win) {
-			if (turn % 2 == 0) {
-				player = 'X';
-			}
-			else {
-				player = 'O';
-			}
+			if (turnIsOdd()) player = 'X';
+			else player = 'O';
 
 			for (;;) {
 				cout << player << ", it is your turn! Choose a place (1-9): ";
@@ -54,13 +49,7 @@ int main() {
 			cout << "\n";
 			display_gameboard(board);
 			
-			if ((board[0] == player && board[1] == player && board[2] == player) || (board[3] == player && board[4] == player && board[5] == player) || (board[6] == player && board[7] == player && board[8] == player) ||
-				(board[0] == player && board[3] == player && board[6] == player) || (board[1] == player && board[4] == player && board[7] == player) || (board[2] == player && board[5] == player && board[8] == player) ||
-				(board[0] == player && board[4] == player && board[8] == player) || (board[2] == player && board[4] == player && board[6] == player)) {
-				win = 1;
-				champ = player;
-			}
-			turn += 1;
+			turn++;
 		}
 
 		board.clear();
@@ -77,7 +66,7 @@ int main() {
 	return 0;
 }
 
-void intro_text() {
+void IntroText() {
 	cout << "Tic-Tac-Toe!\n\n"
 		<< "Rules: X starts first! Type 1-9 to input your move! The game will automatically alternate turns.\n"
 		<< "This is the gameboard. It is sorted like a numpad: \n\n"
@@ -88,8 +77,32 @@ void intro_text() {
 		<< "Let's Begin!\n\n";
 }
 
-void display_gameboard(vector<char> boardish) {
-	vector<char> board = boardish;
+bool PlayerHasWon() {
+	if ((board[0] == player && board[1] == player && board[2] == player) || (board[3] == player && board[4] == player && board[5] == player) || (board[6] == player && board[7] == player && board[8] == player) ||
+		(board[0] == player && board[3] == player && board[6] == player) || (board[1] == player && board[4] == player && board[7] == player) || (board[2] == player && board[5] == player && board[8] == player) ||
+		(board[0] == player && board[4] == player && board[8] == player) || (board[2] == player && board[4] == player && board[6] == player)) 
+	{
+		win = 1;
+		champ = player;
+		return true;
+	}
+	else return false;
+}
+
+bool TurnIsOdd()
+{
+	turn % 2 == 0
+}
+
+bool diagonal_win
+
+void ClearBoard()
+{
+	
+}
+
+void display_gameboard(vector<char> charVec) {
+	vector<char> board = charVec;
 	cout << board[6] << "  |  " << board[7] << "  |  " << board[8] << '\n'
 		<< board[3] << "  |  " << board[4] << "  |  " << board[5] << '\n'
 		<< board[0] << "  |  " << board[1] << "  |  " << board[2] << "\n\n";
