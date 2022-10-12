@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <limits>
 
 using namespace std;
 
@@ -12,111 +13,66 @@ int main() {
 	for (int i = 1; i <= 9; i++) {
 		board.push_back('-');
 	}
-	display_gameboard(board);
+
 	int turn = 0;
+	char player;
 	bool win = 0;
-	while (true) {
+	char champ;
+	char continue_choice = 'y';
+	int move_choice;
+
+	while (tolower(continue_choice) == 'y') {
+		display_gameboard(board);
 		while (!win) {
-			int move_choice;
 			if (turn % 2 == 0) {
-				cout << "X, it is your turn! Choose a place (1-9): ";
-				cin >> move_choice;
-				if (move_choice > 10 || move_choice <= 0) {
-					cout << "Please choose a section on the board!\n";
-					continue;
-				}
-				switch (move_choice) {
-				case 1:
-					board[0] = 'X';
-					break;
-				case 2:
-					board[1] = 'X';
-					break;
-				case 3:
-					board[2] = 'X';
-					break;
-				case 4:
-					board[3] = 'X';
-					break;
-				case 5:
-					board[4] = 'X';
-					break;
-				case 6:
-					board[5] = 'X';
-					break;
-				case 7:
-					board[6] = 'X';
-					break;
-				case 8:
-					board[7] = 'X';
-					break;
-				case 9:
-					board[8] = 'X';
-					break;
-				default:
-					cout << "Please choose a section of the board!";
-					break;
-				}
-				cout << "\n";
-				display_gameboard(board);
-				turn += 1;
-				if ((board[0] == 'X' && board[1] == 'X' && board[2] == 'X') || (board[3] == 'X' && board[4] == 'X' && board[5] == 'X') || (board[6] == 'X' && board[7] == 'X' && board[8] == 'X') ||
-					(board[0] == 'X' && board[3] == 'X' && board[6] == 'X') || (board[1] == 'X' && board[4] == 'X' && board[7] == 'X') || (board[2] == 'X' && board[5] == 'X' && board[8] == 'X') ||
-					(board[0] == 'X' && board[4] == 'X' && board[8] == 'X') || (board[2] == 'X' && board[4] == 'X' && board[6] == 'X')) {
-					win = 1;
-				}
-			}
-			else if (turn % 2 == 1) {
-				cout << "O, it is your turn! Choose a place (1-9): ";
-				cin >> move_choice;
-				if (move_choice > 10 || move_choice <= 0) {
-					cout << "Please choose a section on the board!\n";
-					continue;
-				}
-				switch (move_choice) {
-				case 1:
-					board[0] = 'O';
-					break;
-				case 2:
-					board[1] = 'O';
-					break;
-				case 3:
-					board[2] = 'O';
-					break;
-				case 4:
-					board[3] = 'O';
-					break;
-				case 5:
-					board[4] = 'O';
-					break;
-				case 6:
-					board[5] = 'O';
-					break;
-				case 7:
-					board[6] = 'O';
-					break;
-				case 8:
-					board[7] = 'O';
-					break;
-				case 9:
-					board[8] = 'O';
-					break;
-				}
-				cout << "\n";
-				display_gameboard(board);
-				turn += 1;
-				if ((board[0] == 'O' && board[1] == 'O' && board[2] == 'O') || (board[3] == 'O' && board[4] == 'O' && board[5] == 'O') || (board[6] == 'O' && board[7] == 'O' && board[8] == 'O') ||
-					(board[0] == 'O' && board[3] == 'O' && board[6] == 'O') || (board[1] == 'O' && board[4] == 'O' && board[7] == 'O') || (board[2] == 'O' && board[5] == 'O' && board[8] == 'O') ||
-					(board[0] == 'O' && board[4] == 'O' && board[8] == 'O') || (board[2] == 'O' && board[4] == 'O' && board[6] == 'O')) {
-					win = 1;
-				}
+				player = 'X';
 			}
 			else {
-				cout << "How even?!";
+				player = 'O';
 			}
+
+			for (;;) {
+				cout << player << ", it is your turn! Choose a place (1-9): ";
+				if (cin >> move_choice) {
+					break;
+				}
+				else {
+					cout << "\nPlease enter a position 1-9!\n\n";
+					cin.clear();
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				}
+			}
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				
+			if (move_choice > 10 || move_choice <= 0 || board[move_choice - 1] != '-') {
+				cout << "\nPlease choose an available section on the board!\n\n";
+				continue;
+			}
+
+			board[move_choice - 1] = player;
+			cout << "\n";
+			display_gameboard(board);
+			
+			if ((board[0] == player && board[1] == player && board[2] == player) || (board[3] == player && board[4] == player && board[5] == player) || (board[6] == player && board[7] == player && board[8] == player) ||
+				(board[0] == player && board[3] == player && board[6] == player) || (board[1] == player && board[4] == player && board[7] == player) || (board[2] == player && board[5] == player && board[8] == player) ||
+				(board[0] == player && board[4] == player && board[8] == player) || (board[2] == player && board[4] == player && board[6] == player)) {
+				win = 1;
+				champ = player;
+			}
+			turn += 1;
 		}
-		char continue_choice = 'y';
-		cout << "";
+
+		board.clear();
+		for (int i = 1; i <= 9; i++) {
+			board.push_back('-');
+		}
+		turn = 0;
+		win = 0;
+		cout << champ << " is victorious!\n"
+			<< "Play another game? (y/n): ";
+		cin >> continue_choice;
+		cout << '\n';
 	}
 	return 0;
 }
@@ -135,6 +91,6 @@ void intro_text() {
 void display_gameboard(vector<char> boardish) {
 	vector<char> board = boardish;
 	cout << board[6] << "  |  " << board[7] << "  |  " << board[8] << '\n'
-		<< board[3]	<< "  |  " << board[4] << "  |  " << board[5] << '\n'
+		<< board[3] << "  |  " << board[4] << "  |  " << board[5] << '\n'
 		<< board[0] << "  |  " << board[1] << "  |  " << board[2] << "\n\n";
 }
